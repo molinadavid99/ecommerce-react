@@ -17,7 +17,6 @@ function Navbar({ carritoLength, onCartClick }) {
   return (
     <AppBar position="static" sx={{ backgroundColor: "rgb(49, 114, 52)", margin: 0 }}>
       <Toolbar>
-        {/* Logo */}
         <Box sx={{ display: "flex", alignItems: "center", flexGrow: 1 }}>
           <img 
             src="https://www.iconpacks.net/icons/2/free-leaves-icon-1571-thumb.png" 
@@ -29,11 +28,9 @@ function Navbar({ carritoLength, onCartClick }) {
           </Typography>
         </Box>
 
-        {/* Menú de navegación */}
         <Box sx={{ display: "flex", gap: 2 }}>
           <Button color="inherit">Inicio</Button>
           
-          {/* Categorías con Menú Desplegable */}
           <Button color="inherit" onClick={handleMenuOpen} endIcon={<ExpandMore />}>
             Categorías
           </Button>
@@ -46,7 +43,6 @@ function Navbar({ carritoLength, onCartClick }) {
           <Button color="inherit">Contacto</Button>
         </Box>
 
-        {/* Buscador */}
         <Box sx={{ display: "flex", alignItems: "center", mx: 2 }}>
           <TextField
             variant="outlined"
@@ -66,12 +62,10 @@ function Navbar({ carritoLength, onCartClick }) {
           </IconButton>
         </Box>
 
-        {/* Icono de usuario */}
         <IconButton color="inherit">
           <AccountCircle />
         </IconButton>
 
-        {/* Icono del carrito */}
         <CartWidget carritoLength={carritoLength} onCartClick={onCartClick} />
       </Toolbar>
     </AppBar>

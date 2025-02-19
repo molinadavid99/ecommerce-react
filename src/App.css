@@ -41,6 +41,10 @@
   color: #888;
 }
 
+h5 {
+  color: green
+}
+
 h6 {
-  color: green;
+  color: rgb(124, 174, 64);
 }

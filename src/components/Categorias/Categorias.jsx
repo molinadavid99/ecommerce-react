@@ -4,7 +4,7 @@ import { Box, Card, CardActionArea, CardMedia, CardContent, Typography } from "@
 function Categorias({ categorias, onSelectCategoria }) {
   return (
     <Box sx={{ padding: 2 }}>
-      <Typography variant="h5" gutterBottom>
+      <Typography variant="h5"gutterBottom>
         Categorías
       </Typography>
       <Box
