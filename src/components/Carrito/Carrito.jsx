@@ -1,29 +1,45 @@
 import React from "react";
-import { Dialog, DialogTitle, DialogContent, List, ListItem, ListItemText, Button } from "@mui/material";
+import { Modal, Box, Typography, Button, List, ListItem, ListItemText } from "@mui/material";
 
-function Carrito({ carrito, open, onClose }) {
+function Carrito({ carrito, abierto, setAbierto }) {
+  const handleClose = () => setAbierto(false); 
+
   return (
-    <Dialog open={open} onClose={onClose}>
-      <DialogTitle>Carrito de Compras</DialogTitle>
-      <DialogContent>
-        <List>
-          {carrito.length > 0 ? (
-            carrito.map((item, index) => (
-              <ListItem key={index}>
-                <ListItemText primary={item.nombre} secondary={`$${item.precio}`} />
+    <Modal open={abierto} onClose={handleClose}>
+      <Box
+        sx={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          width: 400,
+          bgcolor: "background.paper",
+          boxShadow: 24,
+          p: 4,
+          borderRadius: 2,
+        }}
+      >
+        <Typography variant="h6" sx={{ mb: 2 }}>
+          🛒 Carrito de Compras
+        </Typography>
+
+        {carrito.length === 0 ? (
+          <Typography variant="body1">Tu carrito está vacío.</Typography>
+        ) : (
+          <List>
+            {carrito.map((producto, index) => (
+              <ListItem key={index} sx={{ borderBottom: "1px solid #ddd" }}>
+                <ListItemText primary={producto.nombre} secondary={`$${producto.precio}`} />
               </ListItem>
-            ))
-          ) : (
-            <ListItem>
-              <ListItemText primary="El carrito está vacío" />
-            </ListItem>
-          )}
-        </List>
-        <Button onClick={onClose} variant="contained" color="secondary">
+            ))}
+          </List>
+        )}
+
+        <Button onClick={handleClose} variant="contained" color="primary" fullWidth sx={{ mt: 2 }}>
           Cerrar
         </Button>
-      </DialogContent>
-    </Dialog>
+      </Box>
+    </Modal>
   );
 }
 
