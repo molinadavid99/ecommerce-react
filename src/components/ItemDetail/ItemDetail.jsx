@@ -1,33 +1,50 @@
-import React from "react";
-import { Card, CardMedia, CardContent, Typography, Button, CardActions } from "@mui/material";
+import React, { useState } from "react";  
+import { Card, CardMedia, CardContent, Typography, Button, Box } from "@mui/material";
+import { useCart } from "../Context/CartContext";  
+import { Link } from "react-router-dom"; 
 
-function ItemDetail({ producto, agregarAlCarrito }) {
+function ItemDetail({ producto }) {
+  if (!producto) return null; 
+
+  const { agregarAlCarrito } = useCart();  
+  const [mostrarFinalizar, setMostrarFinalizar] = useState(false); 
+
+  const handleAgregar = () => {
+    const itemCarrito = {
+      id: producto.id,
+      title: producto.title,
+      price: producto.price,
+      imagen: producto.imagen,
+      cantidad: 1,
+    };
+
+    agregarAlCarrito(itemCarrito);
+    setMostrarFinalizar(true); 
+  };
+
   return (
-    <Card sx={{ maxWidth: 345, margin: "auto", boxShadow: 3, mt: 14 }}>
-      <CardMedia component="img" height="250" image={producto.imagen} alt={producto.nombre} />
-
+    <Card sx={{ maxWidth: 400, margin: "auto", mt: 5, textAlign: "center", p: 2 }}>
+      <CardMedia component="img" height="250" image={producto.imagen} alt={producto.title} />
       <CardContent>
-        <Typography variant="h5" component="div" sx={{ fontWeight: "bold", color: "green" }}>
-          {producto.nombre}
+        <Typography variant="h5">{producto.title}</Typography>
+        <Typography variant="body1" color="text.secondary">Precio: ${producto.price}</Typography>
+        <Typography variant="body2" color="text.secondary">Stock: {producto.stock}</Typography>
+        <Typography variant="body2" color="text.primary" sx={{ mt: 2 }}>
+          {producto.description}
         </Typography>
-        <Typography variant="body1" color="text.secondary">
-          Precio: ${producto.precio}
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
-          Stock disponible: {producto.stock}
-        </Typography>
-      </CardContent>
 
-      <CardActions>
-        <Button
-          variant="contained"
-          color="warning"
-          onClick={() => agregarAlCarrito(producto)}
-          fullWidth
-        >
-          Agregar al carrito
-        </Button>
-      </CardActions>
+        <Box sx={{ mt: 2, display: "flex", flexDirection: "column", gap: 1 }}>
+          <Button variant="contained" color="primary" onClick={handleAgregar}>
+            Agregar al carrito
+          </Button>
+          
+          {mostrarFinalizar && (  
+            <Button component={Link} to="/carrito" variant="contained" color="success">
+              Finalizar Compra
+            </Button>
+          )}
+        </Box>
+      </CardContent>
     </Card>
   );
 }

@@ -41,16 +41,19 @@ function Navbar({ carritoLength, onCartClick }) {
     }}
   >
       <Toolbar>
-        <Box sx={{ display: "flex", alignItems: "center", flexGrow: 1 }}>
+    <Box sx={{ display: "flex", alignItems: "center", flexGrow: 1 }}>
+        <Link to="/" style={{ display: "flex", alignItems: "center", textDecoration: "none", color: "inherit" }}>
           <img
             src="https://www.iconpacks.net/icons/2/free-leaves-icon-1571-thumb.png"
             alt="Logo"
-            style={{ width: "40px", marginRight: "10px" }}
-          />
-          <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-            PLANET
-          </Typography>
-        </Box>
+            style={{ width: "40px", marginRight: "10px", cursor: "pointer" }}
+        />
+        <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+          PLANET
+        </Typography>
+    </Link>
+  </Box>
+
 
         <Box sx={{ display: "flex", gap: 2 }}>
           <Button component={Link} to="/" color="inherit">
@@ -105,7 +108,3 @@ function Navbar({ carritoLength, onCartClick }) {
 }
 
 export default Navbar;
-
-
-
-

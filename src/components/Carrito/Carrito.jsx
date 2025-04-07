@@ -1,45 +1,56 @@
-import React from "react";
-import { Modal, Box, Typography, Button, List, ListItem, ListItemText } from "@mui/material";
+import React, { useState } from "react";
+import { Box, Typography, Button, IconButton } from "@mui/material";
+import { useCart } from "../Context/CartContext";
+import CheckoutForm from "../CheckoutForm/CheckoutForm"; 
 
-function Carrito({ carrito, abierto, setAbierto }) {
-  const handleClose = () => setAbierto(false); 
+function Carrito() {
+  const { carrito, eliminarDelCarrito, actualizarCantidad, totalPagar } = useCart();
+  const [mostrarCheckout, setMostrarCheckout] = useState(false);
+
+  const handleFinalizarCompra = () => {
+    setMostrarCheckout(true);
+  };
 
   return (
-    <Modal open={abierto} onClose={handleClose}>
-      <Box
-        sx={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          width: 400,
-          bgcolor: "background.paper",
-          boxShadow: 24,
-          p: 4,
-          borderRadius: 2,
-        }}
-      >
-        <Typography variant="h6" sx={{ mb: 2 }}>
-          🛒 Carrito de Compras
-        </Typography>
+    <Box sx={{ maxWidth: "80%", margin: "auto", mt: 5, textAlign: "center" }}>
+      <Typography variant="h4" gutterBottom>Carrito de Compras</Typography>
 
-        {carrito.length === 0 ? (
-          <Typography variant="body1">Tu carrito está vacío.</Typography>
-        ) : (
-          <List>
-            {carrito.map((producto, index) => (
-              <ListItem key={index} sx={{ borderBottom: "1px solid #ddd" }}>
-                <ListItemText primary={producto.nombre} secondary={`$${producto.precio}`} />
-              </ListItem>
-            ))}
-          </List>
-        )}
+      {carrito.length === 0 ? (
+        <Typography variant="h6">El carrito está vacío</Typography>
+      ) : mostrarCheckout ? (
+        <CheckoutForm carrito={carrito} /> 
+      ) : (
+        <>
+          {carrito.map((item) => (
+            <Box 
+              key={item.id} 
+              sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", mb: 2, border: "1px solid #ddd", p: 2, borderRadius: "8px" }}
+            >
+              <img src={item.imagen} alt={item.title} width="80" />
+              <Typography>{item.title}</Typography>
+              <Typography>${item.price}</Typography>
+              <Box sx={{ display: "flex", alignItems: "center" }}>
+                <Button onClick={() => actualizarCantidad(item.id, item.cantidad - 1)} disabled={item.cantidad <= 1}>-</Button>
+                <Typography sx={{ mx: 2 }}>{item.cantidad}</Typography>
+                <Button onClick={() => actualizarCantidad(item.id, item.cantidad + 1)}>+</Button>
+              </Box>
+              <IconButton onClick={() => eliminarDelCarrito(item.id)}>❌</IconButton>
+            </Box>
+          ))}
 
-        <Button onClick={handleClose} variant="contained" color="primary" fullWidth sx={{ mt: 2 }}>
-          Cerrar
-        </Button>
-      </Box>
-    </Modal>
+          <Typography variant="h5" sx={{ mt: 2 }}>Total: ${totalPagar}</Typography>
+
+          <Button 
+            variant="contained" 
+            color="primary" 
+            sx={{ mt: 3 }}
+            onClick={handleFinalizarCompra}
+          >
+            Finalizar Compra
+          </Button>
+        </>
+      )}
+    </Box>
   );
 }
 
