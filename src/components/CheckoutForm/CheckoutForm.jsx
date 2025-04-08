@@ -39,12 +39,12 @@ function CheckoutForm({ carrito }) {
     try {
       const docRef = await addDoc(collection(db, "orders"), order); 
 
-      // 🔥 Acá actualizamos el stock de cada producto comprado
+      
       for (const item of carrito) {
         await actualizarStock(item.id, item.cantidad);
       }
 
-      vaciarCarrito(); // Limpiamos carrito después de actualizar stock
+      vaciarCarrito(); 
 
       Swal.fire({
         title: '¡Gracias por tu compra!',
