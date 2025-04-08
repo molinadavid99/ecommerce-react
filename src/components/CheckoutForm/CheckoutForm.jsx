@@ -1,10 +1,10 @@
-import React, { useState } from "react"; 
+import React, { useState } from "react";  
 import { Box, Button, TextField, Typography } from "@mui/material";
 import { useCart } from "../Context/CartContext";  
 import { db } from "../../firebase/client"; 
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { actualizarStock } from "../../firebase/stock"; 
 import Swal from 'sweetalert2';
-
 
 function CheckoutForm({ carrito }) {
   const [formData, setFormData] = useState({
@@ -23,38 +23,45 @@ function CheckoutForm({ carrito }) {
     return carrito.reduce((acc, item) => acc + item.price * item.cantidad, 0);
   };
 
-const handleSubmit = async () => {
-  const order = {
-    buyer: formData,
-    items: carrito.map((item) => ({
-      id: item.id,
-      title: item.title,
-      price: item.price,
-      cantidad: item.cantidad
-    })),
-    total: calcularTotal(),
-    date: serverTimestamp()
-  };
+  const handleSubmit = async () => {
+    const order = {
+      buyer: formData,
+      items: carrito.map((item) => ({
+        id: item.id,
+        title: item.title,
+        price: item.price,
+        cantidad: item.cantidad
+      })),
+      total: calcularTotal(),
+      date: serverTimestamp()
+    };
 
-  try {
-    const docRef = await addDoc(collection(db, "orders"), order); 
-    vaciarCarrito(); 
-    Swal.fire({
-      title: '¡Gracias por tu compra!',
-      text: `Tu código de compra es: ${docRef.id}`,
-      icon: 'success',
-      confirmButtonText: 'Aceptar'
-    });
-  } catch (error) {
-    console.error("Error al generar la orden:", error);
-    Swal.fire({
-      title: 'Lo siento...',
-      text: 'Hubo un error al procesar tu compra.',
-      icon: 'error',
-      confirmButtonText: 'Intentar de nuevo'
-    });
-  }
-};
+    try {
+      const docRef = await addDoc(collection(db, "orders"), order); 
+
+      // 🔥 Acá actualizamos el stock de cada producto comprado
+      for (const item of carrito) {
+        await actualizarStock(item.id, item.cantidad);
+      }
+
+      vaciarCarrito(); // Limpiamos carrito después de actualizar stock
+
+      Swal.fire({
+        title: '¡Gracias por tu compra!',
+        text: `Tu código de compra es: ${docRef.id}`,
+        icon: 'success',
+        confirmButtonText: 'Aceptar'
+      });
+    } catch (error) {
+      console.error("Error al generar la orden:", error);
+      Swal.fire({
+        title: 'Lo siento...',
+        text: 'Hubo un error al procesar tu compra.',
+        icon: 'error',
+        confirmButtonText: 'Intentar de nuevo'
+      });
+    }
+  };
 
   return (
     <Box sx={{ mt: 4, p: 3, border: "1px solid #ccc", borderRadius: 2, maxWidth: "600px", margin: "auto" }}>
